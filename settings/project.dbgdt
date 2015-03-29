@@ -39,7 +39,7 @@
         
         
       <FindDirection>1</FindDirection><FindAsHex>0</FindAsHex></Memory>
-    <WATCH_1><expressions><item>R0</item><item>R1</item><item>R2</item><item>R3</item><item>R4</item><item></item></expressions><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>137</item><item>104</item><item>100</item><item>340</item></col-widths></WATCH_1></Static>
+    <WATCH_1><expressions><item>R0</item><item>R1</item><item>R2</item><item>R3</item><item>R4</item><item/></expressions><col-names><item>Expression</item><item>Location</item><item>Type</item><item>Value</item></col-names><col-widths><item>137</item><item>104</item><item>100</item><item>340</item></col-widths></WATCH_1></Static>
     <Windows>
       
       
