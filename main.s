@@ -1,3 +1,23 @@
+; Lab 4 Breadboard
+;
+; This program implements a 4-bit counter on GPIOA pins 2-5. GPIOA pins 6-7
+; function as enable controls.
+;
+; SW1 and SW1 serve as the user interface as follows:
+; - SW1 short press and release increments the counter output to the 4-bit bus.
+; - SW1 long press toggles between EN1 and EN2 implemented on PA6 and PA7. 
+;   Green LED is EN1. Blue LED is EN2.
+; - SW2 any press activates EN1 or EN2 depending on mode selected via SW1 long
+;   press.
+;
+; This program also illustrates some high-level programming constructs as 
+; implemented in assembly language. It makes use of switch/case and if/else.
+;
+; The switches are polled by making use of SysTick with interrupts to check the
+; switch values at regular intervals.
+;
+; State is maintained in memory. EN1 and EN2 state is maintained in the LED.
+
         NAME    main
       
         PUBLIC  main
