@@ -41,7 +41,7 @@ MultiCoreRunAll=1
 LMIFTDIserialNo=0E20AE4F
 LMIFTDIfoundProbes=
 [DebugChecksum]
-Checksum=184692997
+Checksum=738838023
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -58,19 +58,6 @@ Fmt2={W}0:R1	1	0
 Fmt3={W}0:R2	1	0
 Fmt4={W}0:R3	1	0
 Fmt5={W}0:R4	1	0
-[Log file]
-LoggingEnabled=_ 0
-LogFile=_ ""
-Category=_ 0
-[TermIOLog]
-LoggingEnabled=_ 0
-LogFile=_ ""
-[DriverProfiling]
-Enabled=0
-Mode=0
-Graph=0
-Symbiont=0
-Exclusions=
 [Disassemble mode]
 mode=0
 [Breakpoints]
@@ -78,9 +65,22 @@ Bp0=_ "STD_CODE" "0x00000042" 0 0 0 0 "" 0 ""
 Bp1=_ "STD_CODE" "0x20003024" 0 0 0 0 "" 0 ""
 Bp2=_ "STD_CODE" "{$PROJ_DIR$}.166.1" 0 0 0 0 "" 0 ""
 Count=3
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Aliases]
 A0=_ "Z:\Home\dev\WestminsterCollege\experiments\01-toggle_pa2\main.s" "Z:\Home\WestminsterCollege\CMPT328\labs\lab_4-breadboard\main.s"
 A1=_ "Z:\Home\dev\WestminsterCollege\experiments\e1-breadboard\main.s" ""
 A2=_ "Z:\Home\dev\WestminsterCollege\experiments\e1-breadboard\startup.s" ""
 Count=3
 SuppressDialog=0
+[DriverProfiling]
+Enabled=0
+Mode=0
+Graph=0
+Symbiont=0
+Exclusions=
