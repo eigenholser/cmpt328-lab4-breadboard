@@ -1,13 +1,13 @@
         NAME    startup
-        
+
         PUBLIC  __iar_program_start
         EXTERN  main
         EXTERN  SysTick_Handler
-        
+
 ; Vector Table
         SECTION .intvec : CODE
         DATA
-        DC32    0x20008000U             ; 0x00000000   0   - Stack Pointer
+        DC32    0x20008000              ; 0x00000000   0   - Stack Pointer
         DC32    __iar_program_start     ; 0x00000004   1   - Reset Handler
         DC32    NMI_Handler             ; 0x00000008   2   - NMI Handler
         DC32    HardFault_Handler       ; 0x0000000C   3   - Hard Fault Handler
@@ -162,16 +162,16 @@
         DC32    PWM1Generator2_Handler  ; 0x00000260 152 136 PWM1 Generator 2
         DC32    PWM1Generator3_Handler  ; 0x00000264 153 137 PWM1 Generator 3
         DC32    PWM1Fault_Handler       ; 0x00000268 154 138 PWM1 Fault
-        
-       
-       
+
+
+
         SECTION .text : CODE (2)
         THUMB
-        
-; Reset Vector        
+
+; Reset Vector
 __iar_program_start
         B       main
-        
+
 ; Processor Exception Handlers
 NMI_Handler
 HardFault_Handler
@@ -266,4 +266,4 @@ PWM1Fault_Handler
         B       .
 
         END
-        
+
