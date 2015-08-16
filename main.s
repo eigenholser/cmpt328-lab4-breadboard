@@ -5,12 +5,12 @@
 ;
 ; SW1 and SW1 serve as the user interface as follows:
 ; - SW1 short press and release increments the counter output to the 4-bit bus.
-; - SW1 long press toggles between EN1 and EN2 implemented on PA6 and PA7. 
+; - SW1 long press toggles between EN1 and EN2 implemented on PA6 and PA7.
 ;   Green LED is EN1. Blue LED is EN2.
 ; - SW2 any press activates EN1 or EN2 depending on mode selected via SW1 long
 ;   press.
 ;
-; This program also illustrates some high-level programming constructs as 
+; This program also illustrates some high-level programming constructs as
 ; implemented in assembly language. It makes use of switch/case and if/else.
 ;
 ; The switches are polled by making use of SysTick with interrupts to check the
@@ -19,10 +19,10 @@
 ; State is maintained in memory. EN1 and EN2 state is maintained in the LED.
 
         NAME    main
-      
+
         PUBLIC  main
         PUBLIC SysTick_Handler
-        
+
 ; See "lm4f120h5qr.h" in arm/inc/TexasInstruments
 SYSCTL_RCGCGPIO_R               EQU     0x400FE608
 SYSCTL_GPIOHBCTL_R              EQU     0x400FE06C
@@ -77,23 +77,23 @@ main
         BL      GPIOA_Init
         BL      GPIOF_Init
         BL      LED_Rotate      ; Set initial state
-        
+
         ; Initialize bus value counter--this is temporary
         LDR     R0, =counter_mem
         MOV     R2, #0          ; Starting value
         STR     R2, [R0]
-        
+
         ; Initialize SW1 counter
         LDR     R0, =sw1_counter_mem
         MOV     R2, #0
         STR     R2, [R0]
-        
+
         ; Initialize SysTick for first count.
         BL      SysTick_Init
-        
+
         ; Loop forever
         B       .
-        
+
 ; ---------->% SysTick_Handler >%----------
 ; SysTick fires interrupt periodically. Use it to poll SW1 and SW2.
 ; Input: None
@@ -118,7 +118,7 @@ case_sw1_time_delay
         ; Delay countdown timer
         SBC     R6, R6, #1
         STR     R6, [R5]
-        B       case_sw1_done       
+        B       case_sw1_done
 case_sw1_short_press_release
         BL      CheckSW1Value
         ; If R1 == 0
@@ -139,22 +139,22 @@ button_press_release
         B       case_sw1_done
         ; Else
         BL      ResetSW1Count
-        B       case_sw1_done   
+        B       case_sw1_done
 case_sw1_long_press_hole
         BL      IncrementSW1Counter
         BL      GetSW1Count
         CMP     R1, #long_press_count   ; some large number for long press
         BLT     case_sw1_done
-        
+
         ; It is a long press. Handle it here.
         BL      ResetSW1Count
         BL      LED_Rotate
         LDR     R5, =sw1_long_press_buffer
         MOV     R6, #0x20               ; countdown timer
         STR     R6, [R5]
-        B       case_sw1_done      
+        B       case_sw1_done
 case_sw1_default
-        BL      ResetSW1Count      
+        BL      ResetSW1Count
 case_sw1_done
 case_sw2_press                          ; Switch/case for SW2 button press
         BL      CheckSW2Value
@@ -194,12 +194,12 @@ case_sw2_done
 Handle_Short_Press_Release
         PUSH    {LR}
         BL      ResetSW1Count
-        
+
         ; Load, increment counter.
         LDR     R3, =counter_mem        ; Counter stored here
         LDR     R4, [R3]                ; Count in R4
         ADD     R4, R4, #1              ; Increment by 1
-        
+
         ; Re-init counter if max number
         ; If R4 == count_limit
         CMP     R4, #count_limit
@@ -212,15 +212,15 @@ store_counter
         ; Write counnter to PA2345
         LDR     R0, =GPIO_PORTA_AHB_DATA_BITS_R
         ADD     R0, R0, #1111B << 4     ; Address offset for PA2345
-        
+
         ; Shift and output counter bits
         MOV     R1, R4
         LSL     R1, R1, #2
-        STR     R1, [R0] 
+        STR     R1, [R0]
         POP     {LR}
         BX      LR
 
-; The following several functions could be combined to make 2 functions. But it 
+; The following several functions could be combined to make 2 functions. But it
 ; would add even more code for the caller so I will accept this.
 
 ; ---------->% GetSW1Count >%----------
@@ -231,7 +231,7 @@ GetSW1Count
         LDR     R0, =sw1_counter_mem
         LDR     R1, [R0]
         BX      LR
-        
+
 ; ---------->% GetSW2Count >%----------
 ; Input: None
 ; Output: R1
@@ -240,7 +240,7 @@ GetSW2Count
         LDR     R0, =sw2_counter_mem
         LDR     R1, [R0]
         BX      LR
-        
+
 ; ---------->% ResetSW1Count >%----------
 ; Reset hold count for SW1.
 ; Input: None
@@ -251,7 +251,7 @@ ResetSW1Count
         MOV     R1, #0
         STR     R1, [R0]
         BX      LR
-        
+
 ; ---------->% ResetSW2Count >%----------
 ; Reset hold count for SW2.
 ; Input: None
@@ -262,7 +262,7 @@ ResetSW2Count
         MOV     R1, #0
         STR     R1, [R0]
         BX      LR
-        
+
 ; ---------->% CheckSW1Value >%----------
 ; Check to see if SW1 pressed: Val = 0.
 ; Input: None
@@ -286,7 +286,7 @@ CheckSW2Value
         ADD     R0, R0, #1B << 2        ; SW2 data bit address offset
         LDR     R1, [R0]        ; Load value into R1. See watch window.
         BX      LR
-        
+
 ; ---------->% IncrementSW1Counter >%----------
 ; Increment the SW1 counter saved in memory at location sw1_counter_mem.
 ; Input: None
@@ -312,7 +312,7 @@ IncrementSW2Counter
         ADD     R1, R1, #1      ; Increment by 1
         STR     R1, [R0]        ; Put it back
         BX      LR
-        
+
 ; ---------->% Latch_Toggle >%----------
 ; LED Color stores mode state. Test each color bit to determine which PA6,7 is
 ; active. Toggle active bit 0=>1 or 1=>0.
@@ -326,16 +326,16 @@ Latch_Toggle
         LDR     R1, [R0]
 
 ; Switch/Case
-case_mode_green        
+case_mode_green
         ANDS    R2, R1, #1B << 3        ; Test green
         CBZ     R2, case_mode_blue      ; Not green.
-        B       case_mode_done          ; Use R2 for PA6,7      
+        B       case_mode_done          ; Use R2 for PA6,7
 case_mode_blue
-        ANDS    R2, R1, #1B << 2        ; Test blue     
+        ANDS    R2, R1, #1B << 2        ; Test blue
         CBZ     R2, case_mode_default   ; Not blue
-        B       case_mode_done          ; Use R2 for PA6,7        
+        B       case_mode_done          ; Use R2 for PA6,7
 case_mode_default
-        BX      LR                      ; Don't do anything       
+        BX      LR                      ; Don't do anything
 case_mode_done
         LDR     R0, =GPIO_PORTA_AHB_DATA_BITS_R
         ADD     R0, R0, #11B << 8       ; For PA6,7 only
@@ -347,7 +347,7 @@ case_mode_done
 latch_set
         STR     R2, [R0]
         BX      LR
-        
+
 ; ---------->% LED_Rotate >%----------
 ; Rotate LED colors throught Green=>Blue=>Red. Color also serves as state for
 ; SW2 action. This code copied and pasted from Lab 3.
@@ -366,7 +366,7 @@ LED_Rotate
 SetLED
         STR     R1, [R0]        ; New LED colors
         BX      LR
-        
+
 ; ---------->% Set_GPIOA_Direction_In >%---------
 ; R2 holds the bit map corresponding to the pins we set direction on. Perform
 ; bit clear on current contents of GPIO_PORTA_AHB_DIR_R. 0 = In.
@@ -379,7 +379,7 @@ Set_GPIOA_Direction_In
         BIC     R1, R1, R2
         STR     R1, [R0]
         BX      LR
-        
+
 ; ---------->% Set_GPIOA_Direction_Out >%----------
 ; R2 holds the bit map corresponding to the pins we set direction on. Perform
 ; bitwise AND on current contents of GPIO_PORTA_AHB_DIR_R. 1 = Out.
@@ -392,7 +392,7 @@ Set_GPIOA_Direction_Out
         ORR     R1, R1, R2
         STR     R1, [R0]
         BX      LR
-        
+
 ; ---------->% SysTick_Init >%----------
 ; Initialize SysTick timer with interrupts. SysTick timer will count down
 ; systick_reload + 1 until it reaches zero. Then it will fire the interrupt.
@@ -404,22 +404,22 @@ SysTick_Init
         ; Disable SysTick during init
         PUSH    {LR}                    ; Save LR for later.
         BL      SysTick_Disable         ; Must disable while initializing.
-        
+
         ; Reload value...clock ticks in SysTick counter
         LDR     R0, =NVIC_ST_RELOAD_R   ; See datasheet p140
         LDR     R1, =systick_reload     ; Wait systick_reload + 1 clock cycles
         STR     R1, [R0]
-        
+
         ; Clear Current value
         LDR     R0, =NVIC_ST_CURRENT_R  ; See datasheet p141
         MOV     R1, #0                  ; SysTick Current Value Register
         STR     R1, [R0]
-        
+
         ; Set interrupt priority
         LDR     R0, =NVIC_SYS_PRI3_R    ; NVIC interrupt 15 priority register
         MOV     R1, #0x40000000         ; SysTick bits
         STR     R1, [R0]
-        
+
         BL      SysTick_Enable          ; SysTick on
         POP     {LR}                    ; Grab return PC from stack.
         BX      LR
@@ -434,7 +434,7 @@ SysTick_Enable
         MOV     R1, #7                  ; SysTick Control and Status Register
         STR     R1, [R0]
         BX      LR
-        
+
 ; ---------->% SysTick_Disable >%----------
 ; Disable SysTick
 ; Input: None
@@ -457,23 +457,23 @@ GPIOA_Init
         LDR     R0, =SYSCTL_GPIOHBCTL_R
         MOVS    R1, #0x01       ; GPIOA
         STR     R1, [R0]
-        
+
         ; Enable GPIOA clock
         LDR     R0, =SYSCTL_RCGCGPIO_R
         MOVS    R1, #0x01       ;clockA
         STR     R1, [R0]
-        
+
         ; GPIOA digital enable PA2-7
         LDR     R0, =GPIO_PORTA_AHB_DEN_R
         MOV     R1, #111111B << 2
         STR     R1, [R0]
-        
+
         ; GPIOA direction out PA2-7
         MOV     R2, #111111B << 2
         BL      Set_GPIOA_Direction_Out
         POP     {LR}
         BX      LR
-        
+
 ; ---------->% GPIOF_Init >%----------
 ; Initialize GPIO Port F.
 ; Input: None
@@ -486,7 +486,7 @@ GPIOF_Init
         LDR     R1, [R0]                ; SYSCTL_GPIOHBCTL_R value to R1
         ORR     R1, R1, #1B << 5        ; GPIOF AHB enable bit set
         STR     R1, [R0]
-        
+
         ; Enable GPIOF clock
         LDR     R0, =SYSCTL_RCGCGPIO_R  ; See datasheet p340
         LDR     R1, [R0]                ; SYSCTL_RCGCGPIO_R value to R1
@@ -494,36 +494,36 @@ GPIOF_Init
         STR     R1, [R0]
 
         ; SW2 is an Alternate Function Select bit. Need to unlock it and set
-        ; the commit bit before the AFSEL can be set and SW2 configured for 
+        ; the commit bit before the AFSEL can be set and SW2 configured for
         ; use.
         ; Unlock
         LDR     R0, =GPIO_PORTF_AHB_LOCK_R
         LDR     R1, =UNLOCK_CODE
         STR     R1, [R0]
-        
+
         ; Clear for commit
         LDR     R0, =GPIO_PORTF_AHB_CR_R
         MOV     R1, #1B
         STR     R1, [R0]
-        
+
         ; Enable SW2 Alternate Function Select so we can use it as a switch.
         LDR     R0, =GPIO_PORTF_AHB_AFSEL_R     ; See p671
         LDR     R1, [R0]
         ORR     R1, R1, #1              ; SW2 is bit 0
         STR     R1, [R0]
-        
+
         ; GPIOF direction
         LDR     R0, =GPIO_PORTF_AHB_DIR_R       ; See datasheet p663
         LDR     R1, [R0]                ; GPIO_PORTF_AHB_DIR_R value to R1
         ORR     R1, R1, #0x0E           ; GPIOF PF4 direction PF123 output
         STR     R1, [R0]                ; PF0,4 (SW1, SW2) is input by default.
-        
+
         ; GPIOF digital enable
         LDR     R0, =GPIO_PORTF_AHB_DEN_R       ; See datasheet p682
         LDR     R1, [R0]                ; GPIO_PORTF_AHB_DEN_R value to R1
         ORR     R1, R1, #0x1F           ; Set PF01234 as digital
         STR     R1, [R0]
-        
+
         ; GPIOF PF0,4 pull up resistor for logic HIGH until SW1,SW2 press.
         LDR     R0, =GPIO_PORTF_AHB_PUR_R       ; p677 GPIO Pull-Up Select
         LDR     R1, [R0]
